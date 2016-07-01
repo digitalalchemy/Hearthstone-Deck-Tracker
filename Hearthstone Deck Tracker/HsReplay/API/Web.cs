@@ -33,14 +33,15 @@ namespace Hearthstone_Deck_Tracker.HsReplay.API
 				return (HttpWebResponse)await request.GetResponseAsync();
 			using(var stream = await request.GetRequestStreamAsync())
 			{
+				var encoded = Encoding.UTF8.GetBytes(data);
 				if(gzip)
 				{
 					request.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
 					using(var zipStream = new GZipStream(stream, CompressionMode.Compress))
-						zipStream.Write(Encoding.UTF8.GetBytes(data), 0, data.Length);
+						zipStream.Write(encoded, 0, encoded.Length);
 				}
 				else
-					stream.Write(Encoding.UTF8.GetBytes(data), 0, data.Length);
+					stream.Write(encoded, 0, encoded.Length);
 			}
 			return (HttpWebResponse)await request.GetResponseAsync();
 		}

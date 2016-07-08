@@ -43,10 +43,10 @@ namespace Hearthstone_Deck_Tracker.HsReplay.API
 		[ApiField("spectate_key")]
 		public string SpectateKey => _gameMetaData?.SpectateKey;
 
-		[ApiField("match_start_timestamp")]
+		[ApiField("match_start")]
 		public string TimeStamp => _game?.StartTime != DateTime.MinValue ? _game?.StartTime.ToString("o") : null;
 
-		[ApiField("hearthstone_build")]
+		[ApiField("build")]
 		public int? HearthstoneBuild => _gameMetaData?.HearthstoneBuild ?? _game?.HearthstoneBuild ?? (_game != null ? BuildDates.GetByDate(_game.StartTime) : null);
 
 		[ApiField("game_type")]

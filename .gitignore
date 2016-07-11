@@ -157,3 +157,5 @@ $RECYCLE.BIN/
 Hearthstone Deck Tracker.sln.ide/*
 packages/*
 !packages/repositories.config
+
+Hearthstone Deck Tracker/Releases

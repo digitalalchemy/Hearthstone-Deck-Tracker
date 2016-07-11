@@ -96,7 +96,9 @@ namespace Hearthstone_Deck_Tracker
 
 			if(ConfigManager.UpdatedVersion != null)
 			{
+#if(!SQUIRREL)
 				Updater.Cleanup();
+#endif
 				MainWindow.FlyoutUpdateNotes.IsOpen = true;
 				MainWindow.UpdateNotesControl.SetHighlight(ConfigManager.PreviousVersion);
 				MainWindow.UpdateNotesControl.LoadUpdateNotes();

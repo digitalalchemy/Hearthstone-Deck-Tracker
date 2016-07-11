@@ -12,6 +12,7 @@ using Hearthstone_Deck_Tracker.Controls.Error;
 using Hearthstone_Deck_Tracker.Plugins;
 using Hearthstone_Deck_Tracker.Utility.Extensions;
 using Hearthstone_Deck_Tracker.Windows;
+using Squirrel;
 
 #endregion
 
@@ -67,6 +68,19 @@ namespace Hearthstone_Deck_Tracker
 
 		private void App_OnStartup(object sender, StartupEventArgs e)
 		{
+#if(SQUIRREL)
+			using(var mgr = new UpdateManager("http://hdt.azeier.net/release"))
+			{
+				// Note, in most of these scenarios, the app exits after this method
+				// completes!
+				SquirrelAwareApp.HandleEvents(
+				  onInitialInstall: v => mgr.CreateShortcutForThisExe(),
+				  onAppUpdate: v => mgr.CreateShortcutForThisExe(),
+				  onAppUninstall: v => mgr.RemoveShortcutForThisExe()
+				  //onFirstRun: () => ShowTheWelcomeWizard = true
+				  );
+			}
+#endif
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 			Core.Initialize();
 		}

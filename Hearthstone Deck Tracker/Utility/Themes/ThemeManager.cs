@@ -26,10 +26,11 @@ namespace Hearthstone_Deck_Tracker.Utility.Themes
 
 		private static void LoadThemes(string dir)
 		{
-			var dirs = Directory.GetDirectories(dir);
-			foreach(var d in dirs)
+			var dirInfo = new DirectoryInfo(dir);
+			if(!dirInfo.Exists)
+				return;
+			foreach(var di in dirInfo.GetDirectories())
 			{
-				var di = new DirectoryInfo(d);
 				if(Regex.IsMatch(di.Name, ThemeRegex))
 				{
 					Logging.Log.Warn($"Found theme: {di.Name}");

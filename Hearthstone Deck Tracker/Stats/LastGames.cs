@@ -56,7 +56,7 @@ namespace Hearthstone_Deck_Tracker.Stats
 			{
 				DeckStats stats;
 				if(gi.DeckId != Guid.Empty)
-					stats = DeckStatsList.Instance.DeckStats.FirstOrDefault(x => x.DeckId == gi.DeckId);
+					DeckStatsList.Instance.DeckStats.TryGetValue(gi.DeckId, out stats);
 				else if(!string.IsNullOrEmpty(gi.Hero))
 					stats = DefaultDeckStats.Instance.GetDeckStats(gi.Hero);
 				else
@@ -129,9 +129,12 @@ namespace Hearthstone_Deck_Tracker.Stats
 		{
 			if(!File.Exists(FilePath))
 			{
-				return DeckStatsList.Instance.DeckStats.SelectMany(x => x.Games)
-					.Where(x => x.HasReplayFile).OrderByDescending(x => x.StartTime).Take(10).Select(
-						x => new GameInfo { DeckId = x.DeckId, GameId = x.GameId}).ToList();
+				var games = new List<GameStats>();
+				var enumerator = DeckStatsList.Instance.DeckStats.GetEnumerator();
+				while(enumerator.MoveNext())
+					games.AddRange(enumerator.Current.Value.Games.Where(x => x.HasReplayFile));
+				return games.OrderByDescending(x => x.StartTime).Take(10).Select(
+						x => new GameInfo { DeckId = x.DeckId, GameId = x.GameId }).ToList();
 			}
 			try
 			{
